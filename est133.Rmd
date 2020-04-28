@@ -1,5 +1,5 @@
 ---
-title: "Estadistica I, I-2020"
+title: "Estadística I, I-2020"
 author: "Lic. Alvaro Chirino Gutierrez"
 date: "28/4/2020"
 output: html_document
