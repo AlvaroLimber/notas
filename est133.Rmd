@@ -1,0 +1,21 @@
+---
+title: "Estadistica I, I-2020"
+author: "Lic. Alvaro Chirino Gutierrez"
+date: "28/4/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r,echo=FALSE}
+library(readxl)
+library(knitr)
+bd<-read_excel("C:\\Users\\ALVARO\\Box\\2020\\umsa\\est133\\NOT_EST-133-I2020.xls")
+oo<-order(bd$CI)
+bd<-bd[oo,c(5:11)]
+#kable(bd)
+DT::datatable(bd,style = "bootstrap")
+```
+
