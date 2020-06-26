@@ -1,0 +1,62 @@
+---
+title: "Estadística I, I-2020"
+author: "Lic. Alvaro Chirino Gutierrez"
+date: "28/4/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r,echo=FALSE}
+library(readxl)
+library(knitr)
+#parcial1
+bd<-read_excel("C:\\Users\\ALVARO\\Box\\2020\\umsa\\est133\\NOT_EST-133-I2020.xls")
+#parcial2
+```
+
+
+```{r,echo=FALSE}
+load("C:\\Users\\ALVARO\\Documents\\GitHub\\notas\\EST133_I2020\\p2rev.RData")
+names(p2)[1]<-"CI"
+#merge
+bd2<-merge(bd,p2,all = T)
+bd2$`P2/20`<-bd2$p2_20
+bd2$`P2/20`[is.na(bd2$`P2/20`)]<-0
+bd2$PtsExtra[is.na(bd2$PtsExtra)]<-0
+bd2<-bd2[,-13]
+#suma global
+bd2$Total<-apply(bd2[,6:11],1,sum)
+###########publicar 
+oo<-order(bd2$CI)
+#kable(bd)
+DT::datatable(bd2[oo,c(1,6:12)],style = "bootstrap")
+```
+
+# Rendimiento (Todos los estudiantes $N=127$)
+
+```{r,echo=FALSE}
+hist(bd2$`P1/20`,xlim=c(0,20),main="Parcial 1",xlab="Nota",ylab="Estudiantes")
+abline(v=mean(bd2$`P1/20`),col="blue",lwd=2)
+hist(bd2$`P2/20`,xlim=c(0,20),main="Parcial 2",xlab="Nota",ylab="Estudiantes")
+abline(v=mean(bd2$`P2/20`),col="blue",lwd=2)
+plot(bd2$`P1/20`,bd2$`P2/20`,xlab="Parcial 1",ylab="Parcial 2",main="Desempeño Parcial 1 vs Parcial 2")
+hist(bd2$Total,xlim=c(0,100),main="Nota Acumulada",xlab="Nota",ylab="Estudiantes")
+```
+
+# Rendimiento (Sin contar abandonos $N=105$)
+
+```{r,echo=FALSE}
+aux<-bd2$Total!=0
+hist(bd2$`P1/20`[aux],xlim=c(0,20),main="Parcial 1",xlab="Nota",ylab="Estudiantes")
+abline(v=mean(bd2$`P1/20`[aux]),col="blue",lwd=2)
+hist(bd2$`P2/20`[aux],xlim=c(0,20),main="Parcial 2",xlab="Nota",ylab="Estudiantes")
+abline(v=mean(bd2$`P2/20`[aux]),col="blue",lwd=2)
+plot(bd2$`P1/20`[aux],bd2$`P2/20`[aux],xlab="Parcial 1",ylab="Parcial 2",main="Desempeño Parcial 1 vs Parcial 2")
+hist(bd2$Total[aux],xlim=c(0,100),main="Nota Acumulada",xlab="Nota",ylab="Estudiantes")
+```
+
