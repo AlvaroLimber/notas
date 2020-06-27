@@ -1,7 +1,6 @@
+rm(list=ls())
 library(readxl)
-#parcial 1 y base de datos
-bd<-read_excel("C:\\Users\\ALVARO\\Box\\2020\\umsa\\est133\\NOT_EST-133-I2020.xls")
-#parical 2
+#parcial 2
 p2<-read.csv("C:\\Users\\ALVARO\\Box\\2020\\umsa\\est133\\parcial2_google.csv",sep=",")
 p2<-p2[,-c(5,6,8,9,11,12,14,15)]
 names(p2)[1:7]<-c("time","mail","nota","ci","ru","nacimiento","tipo")
@@ -17,6 +16,10 @@ sort(c(paste0("preg6",letters[1:4]),paste0("preg6",letters[1:4],"_pt"))),
 paste0(rep(c("preg","preg_pt"),3),sort(rep(7:10,2))))
 names(p2p)[8:39]<-nn
 names(p2i)[8:39]<-nn
+#correcci?n impar 28/29
+p2i[[29]][p2i[,28]=="F"]<-"0.00 / 2"
+p2i[[29]][p2i[,28]=="V"]<-"2.00 / 2"
+###########
 p2<-rbind(p2p,p2i)
 rm(p2p,p2i)
 ############CONFIRMACION DE LA EVALUACIÓN
@@ -100,17 +103,6 @@ p2$nota_p10[is.na(p2$nota_p10)]<-0
 
 p2$nota_rev<-apply(p2[,40:49],1,sum)
 p2$p2_20<-(apply(p2[,40:49],1,sum)/100)*20
-###verificando par impar
-
-lastci <- function(x){
-  x<-as.character(x)
-  res<-sapply(lapply(strsplit(x, NULL), rev), paste, collapse="")
-  return(res)
-  }
-
-table(as.numeric(substr(strReverse(p2$ci),1,1)) %% 2,p2$tipo)
-
-  p2$p2_20<-(apply(p2[,40:49],1,sum)/100)*20
-
+###
 p2<-p2[,c("ci","p2_20")]
 save(p2,file="p2rev.RData")
