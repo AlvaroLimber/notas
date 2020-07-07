@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r,echo=FALSE}
+rm(list=ls())
 library(readxl)
 library(knitr)
 #parcial1
@@ -22,6 +23,9 @@ bd<-read_excel("C:\\Users\\ALVARO\\Box\\2020\\umsa\\est133\\NOT_EST-133-I2020.xl
 
 ```{r,echo=FALSE}
 load("C:\\Users\\ALVARO\\Documents\\GitHub\\notas\\EST133_I2020\\p2rev.RData")
+p2r<-p2
+rm(p2)
+load("C:\\Users\\ALVARO\\Documents\\GitHub\\notas\\EST133_I2020\\p2rev2.RData")
 names(p2)[1]<-"CI"
 #merge
 bd2<-merge(bd,p2,all = T)

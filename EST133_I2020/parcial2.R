@@ -105,4 +105,6 @@ p2$nota_rev<-apply(p2[,40:49],1,sum)
 p2$p2_20<-(apply(p2[,40:49],1,sum)/100)*20
 ###
 p2<-p2[,c("ci","p2_20")]
-save(p2,file="p2rev.RData")
+setwd("C:\\Users\\ALVARO\\Documents\\GitHub\\notas\\EST133_I2020\\")
+save(p2,file="p2rev2.RData")
+#save(p2,file="p2rev.RData")
