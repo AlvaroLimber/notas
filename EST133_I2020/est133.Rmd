@@ -51,11 +51,11 @@ p1r$p1r<-apply(p1r[,2:3],1,max,na.rm=T)
 #p2 recup
 aux<-recup[recup$tipo=="Segundo Parcial",2:3]
 names(p2)[1]<-"ci"
-p2r<-merge(p2,aux,all.x= T)
+p2r<-merge(p2,aux,all= T)
 p2r$p2r<-apply(p2r[,2:3],1,max,na.rm=T)
 #p3 recup
 aux<-recup[recup$tipo=="Tercer Parcial",2:3]
-p3r<-merge(p3,aux,all.x= T)
+p3r<-merge(p3,aux,all= T)
 p3r$p3r<-apply(p3r[,2:3],1,max,na.rm=T)
 ################################
 #Consolidado
@@ -69,7 +69,7 @@ p3r<-p3r[p3r$CI!="7777777",]
 p3r[p3r$CI=="10082977","CI"]<-"10082877"
 aux<-merge(aux,p3r,all = T)
 #union global
-bd2<-merge(bd,aux,all.x = T)
+bd2<-merge(bd,aux,all = T)
 
 bd2$`P1/20`<-bd2$p1_20_final
 bd2$`P2/20`<-bd2$p2_20_final
