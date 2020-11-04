@@ -1,0 +1,88 @@
+---
+title: "Estadística I, II-2020"
+author: "Lic. Alvaro Chirino Gutierrez"
+date: "Noviembre, 2020"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r,echo=FALSE,warning=F,message=F}
+rm(list=ls())
+library(readxl)
+library(knitr)
+library(dplyr)
+#lista oficial
+lista<-read_excel("C:\\Users\\ALVARO\\Box\\2020\\umsa\\est133\\Lista-EST 133-2020-SEGUNDO-C.xls",range = "A11:J113")
+#parcial1
+load("C:\\Users\\ALVARO\\Box\\2020\\umsa\\est133\\r-exams\\p1_ii2020.RData")
+p1<-p1_fin
+################################
+#Consolidado
+#ci
+ci<-lista[,c(3,4)]
+names(ci)[1]<-"ci"
+#P1
+p1_ci<-merge(ci,p1,all = T)
+p1_ci<-p1_ci[,c(1,7:21)]
+names(p1_ci)[1]<-"Cedula"
+#union global
+bd<-merge(lista,p1_ci[,c("Cedula","nota_P1")],all.x = T)
+bd$nota_P1[is.na(bd$nota_P1)]<-0
+bd$P1<-bd$nota_P1
+bd$Total<-apply(bd[,5:10],1,sum)
+###########publicar 
+oo<-order(bd$Cedula)
+#kable(bd)
+```
+
+## Patrón de respuesta Parcial 1
+
+```{r,echo=FALSE,warning=F,message=F}
+DT::datatable(p1_ci,style = "bootstrap")
+```
+
+## Solucionario Parcial 1
+
+último dígito CI | Respuestas
+------|---------
+0 | [Aquí]()
+1 | [Aquí]()
+2 | [Aquí]()
+3 | [Aquí]()
+4 | [Aquí]()
+5 | [Aquí]()
+6 | [Aquí]()
+7 | [Aquí]()
+8 | [Aquí]()
+9 | [Aquí]()
+
+
+## Consolidado por evaluación
+
+```{r,echo=FALSE,warning=F,message=F}
+DT::datatable(bd[oo,c(1,5:10,12)],style = "bootstrap")
+```
+
+
+# Rendimiento (Todos los estudiantes `r dim(bd)[1]`)
+
+```{r,echo=FALSE}
+hist(bd$P1,xlim=c(0,20),main="Parcial 1",xlab="Nota",ylab="Estudiantes")
+abline(v=mean(bd$P1),col="blue",lwd=2)
+```
+
+# Rendimiento (Sin contar abandonos `r dim(bd[bd$Total!=0,])[1]`)
+
+```{r,echo=FALSE}
+aux<-bd$Total!=0
+hist(bd$P1[aux],xlim=c(0,20),main="Parcial 1",xlab="Nota",ylab="Estudiantes")
+abline(v=mean(bd$P1[aux]),col="blue",lwd=2)
+
+library(ggplot2)
+ggplot(bd[aux,],aes(P1))+geom_density(colour="red")
+```
