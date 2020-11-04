@@ -30,6 +30,7 @@ names(ci)[1]<-"ci"
 p1_ci<-merge(ci,p1,all = T)
 p1_ci<-p1_ci[,c(1,7:21)]
 names(p1_ci)[1]<-"Cedula"
+p1_ci$tipo[p1_ci$tipo==10 & !is.na(p1_ci$tipo)]<-0
 #union global
 bd<-merge(lista,p1_ci[,c("Cedula","nota_P1")],all.x = T)
 bd$nota_P1[is.na(bd$nota_P1)]<-0
@@ -50,17 +51,16 @@ DT::datatable(p1_ci,style = "bootstrap")
 
 último dígito CI | Respuestas
 ------|---------
-0 | [Aquí]()
-1 | [Aquí]()
-2 | [Aquí]()
-3 | [Aquí]()
-4 | [Aquí]()
-5 | [Aquí]()
-6 | [Aquí]()
-7 | [Aquí]()
-8 | [Aquí]()
-9 | [Aquí]()
-
+0 | [Aquí](https://alvarolimber.github.io/notas/EST133_II2020/p1_sol_00.pdf)
+1 | [Aquí](https://alvarolimber.github.io/notas/EST133_II2020/p1_sol_01.pdf)
+2 | [Aquí](https://alvarolimber.github.io/notas/EST133_II2020/p1_sol_02.pdf)
+3 | [Aquí](https://alvarolimber.github.io/notas/EST133_II2020/p1_sol_03.pdf)
+4 | [Aquí](https://alvarolimber.github.io/notas/EST133_II2020/p1_sol_04.pdf)
+5 | [Aquí](https://alvarolimber.github.io/notas/EST133_II2020/p1_sol_05.pdf)
+6 | [Aquí](https://alvarolimber.github.io/notas/EST133_II2020/p1_sol_06.pdf)
+7 | [Aquí](https://alvarolimber.github.io/notas/EST133_II2020/p1_sol_07.pdf)
+8 | [Aquí](https://alvarolimber.github.io/notas/EST133_II2020/p1_sol_08.pdf)
+9 | [Aquí](https://alvarolimber.github.io/notas/EST133_II2020/p1_sol_09.pdf)
 
 ## Consolidado por evaluación
 
