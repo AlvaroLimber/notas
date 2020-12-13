@@ -1,7 +1,7 @@
 ---
 title: "Estadística I, II-2020"
 author: "Lic. Alvaro Chirino Gutierrez"
-date: "Noviembre, 2020"
+date: "Diciembre, 2020"
 output: html_document
 editor_options: 
   chunk_output_type: console
@@ -52,6 +52,53 @@ p2_ci$tipo[p2_ci$tipo==10 & !is.na(p2_ci$tipo)]<-0
 bd<-merge(bd,p2_ci[,c("Cedula","nota_P2")],all.x = T)
 bd$nota_P2[is.na(bd$nota_P2)]<-0
 bd$P2<-bd$nota_P2
+###############################
+#Tareas virtuales y práctica
+###############################
+tarea<-read.csv("C:\\Users\\ALVARO\\Box\\2020\\umsa\\est133\\r-exams\\EST_133_C_ESTADÍSTICA_I.csv")
+tarea<-tarea[-c(1:2),]
+names(tarea)<-c("apellido","name","mail",paste0("tarea",1:12),"practica")
+
+tarea[,4:16] <- sapply(tarea[,4:16],as.numeric)
+tarea[is.na(tarea)]<-0
+
+tarea$nota_P3<-apply(tarea[,4:15],1,sum)
+tarea$nota_P5<-tarea$practica
+tarea<-tarea %>% filter(nota_P3>0 | nota_P5>0)
+#mail
+mail<-read_excel("C:\\Users\\ALVARO\\Box\\2020\\umsa\\est133\\r-exams\\mail_EST133_II2020.xlsx",range = "D11:F113")
+names(mail)<-c("Cedula","Nombre","mail")
+tarea2<-merge(mail,tarea,all.y = T)
+
+auxci<-read_excel("C:\\Users\\ALVARO\\Box\\2020\\umsa\\est133\\r-exams\\data_ci.xlsx")
+tarea3<-merge(tarea2,auxci,all.x = T)
+tarea3$Cedula[is.na(tarea3$Cedula)]<-tarea3$CI[is.na(tarea3$Cedula)]
+
+tarea3<-tarea3 %>% group_by(Cedula) %>% summarise(nota_P3=max(nota_P3),nota_P5=max(nota_P5))
+#aux<-tarea2[is.na(tarea2$Cedula),1:4]$mail
+#write.xlsx(tarea2[is.na(tarea2$Cedula),1:5],"data.xlsx")
+###############################
+### Recuperatorio
+###############################
+load("C:\\Users\\ALVARO\\Box\\2020\\umsa\\est133\\r-exams\\recup.RData")
+names(recup)<-c("tipo","Cedula","nota_recup")
+bd<-merge(bd,tarea3,all.x = T)
+bd<-merge(bd,recup,all.x = T)
+
+bd$nota_P3[is.na(bd$nota_P3)]<-0
+bd$nota_P5[is.na(bd$nota_P5)]<-0
+bd$nota_recup[is.na(bd$nota_recup)]<-0
+bd$tipo[is.na(bd$tipo)]<-""
+
+bd$P1[bd$tipo=="Primer parcial"]<-pmax(bd$P1[bd$tipo=="Primer parcial"],bd$nota_recup[bd$tipo=="Primer parcial"])
+
+bd$P2[bd$tipo=="Segundo Parcial"]<-pmax(bd$P2[bd$tipo=="Segundo Parcial"],bd$nota_recup[bd$tipo=="Segundo Parcial"])
+
+bd$P3<-bd$nota_P3
+bd$P5<-bd$nota_P5
+
+###############################
+
 bd$Total<-apply(bd[,5:10],1,sum)
 
 ###########publicar 
