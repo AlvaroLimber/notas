@@ -96,14 +96,22 @@ bd$P2[bd$tipo=="Segundo Parcial"]<-pmax(bd$P2[bd$tipo=="Segundo Parcial"],bd$not
 
 bd$P3<-bd$nota_P3
 bd$P5<-bd$nota_P5
-
 ###############################
+#final
+###############################
+load("C:\\Users\\ALVARO\\Box\\2020\\umsa\\est133\\r-exams\\final.RData")
 
+bd<-merge(bd,final,all.x = T)
+bd$nota_P4[is.na(bd$nota_P4)]<-0
+bd$P4<-bd$nota_P4
+#names(bd)
+###############################
 bd$Total<-apply(bd[,5:10],1,sum)
 
 ###########publicar 
 oo<-order(bd$Cedula)
 #kable(bd)
+writexl::write_xlsx(bd,"C:\\Users\\ALVARO\\Box\\2020\\umsa\\est133\\r-exams\\consolidado_v0.xlsx")
 ```
 
 # Consolidado por evaluación
@@ -117,6 +125,8 @@ oo<-order(bd$Cedula)
 
 ```{r,echo=FALSE,warning=F,message=F}
 DT::datatable(bd[oo,c(1,5:10,12)],style = "bootstrap")
+
+bd %>% mutate(Estado=if_else(Total>50,"Aprobado","Reprobado")) %>% group_by(Estado) %>% count() %>% kable()
 ```
 
 ## Patrón de respuesta Parcial 1
@@ -160,6 +170,14 @@ DT::datatable(p2_ci,style = "bootstrap")
 7 | [Aquí](https://alvarolimber.github.io/notas/EST133_II2020/p2_sol_07.pdf)
 8 | [Aquí](https://alvarolimber.github.io/notas/EST133_II2020/p2_sol_08.pdf)
 9 | [Aquí](https://alvarolimber.github.io/notas/EST133_II2020/p2_sol_09.pdf)
+
+## Solucionario Recuperatorio
+
+* [Aquí](https://alvarolimber.github.io/notas/EST133_II2020/recuperatorio_sol.pdf)
+
+## Solucionario Final
+
+* [Aquí](https://alvarolimber.github.io/notas/EST133_II2020/final_sol.pdf)
 
 # Rendimiento (Todos los estudiantes `r dim(bd)[1]`)
 
