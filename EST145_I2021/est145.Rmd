@@ -173,6 +173,44 @@ DT::datatable(p2_ci,style = "bootstrap")
 
 ## Patrón de respuesta Final
 
+En los pdf del solucionario existen errores en el ejercicio 1, 10, 14 y 15. El detalle es:
+
+### Notas sobre el ejercicio 1
+
+Las únicas opciones correctas son:
+
+* Para el caso continuo $\int_{Rx} f(x,y) dx = f(y)$
+* Si dos variables aleatorias $X$, $Y$ son independientes, entonces $cov(x,y)=0$
+
+### Notas sobre el ejercicio 10
+
+Las opciones correctas por versión es:
+
+  - 1: e  "00001"
+  - 2: d  "00010"
+  - 3: e  "00001"
+  - 4: e  "00001"
+  - 5: c  "00100"
+  - 6: a  "10000"
+  - 7: e  "00001"
+  - 8: d  "00010"
+  - 9: a  "10000"
+  - 0: b  "01000"
+
+### Notas sobre el ejercicio 14
+
+Las únicas respuestas correctas son:
+
+* El error de tipo II reduce con una muestra más grande 
+* El error de tipo I y II se fijan al momento de calcular el tamaño de muestra para la prueba
+
+### Notas sobre el ejercicio 15
+
+Las únicas respuestas correctas son:
+
+* Las variables de las dos poblaciones se distribuyen como normal
+* La estadística de prueba se distribuye como una F de Fisher
+
 ```{r,echo=FALSE,warning=F,message=F}
 DT::datatable(final_ci,style = "bootstrap")
 ```
