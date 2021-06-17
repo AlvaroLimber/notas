@@ -192,6 +192,32 @@ DT::datatable(final_ci,style = "bootstrap")
 8 | [Aquí](https://alvarolimber.github.io/notas/EST145_I2021/final_sol_08.pdf)
 9 | [Aquí](https://alvarolimber.github.io/notas/EST145_I2021/final_sol_09.pdf)
 
+## Patrón de respuesta Recuperatorio Parcial 1
+
+```{r,echo=FALSE,warning=F,message=F}
+DT::datatable(rp1_ci,style = "bootstrap")
+```
+
+## Solucionario Recuperatorio Parcial 1
+
+Dígito CI | Respuestas
+------|---------
+Par | [Aquí](https://alvarolimber.github.io/notas/EST145_I2021/rec_p1_sol_1.pdf)
+Impar | [Aquí](https://alvarolimber.github.io/notas/EST145_I2021/rec_p1_sol_2.pdf)
+
+## Patrón de respuesta Recuperatorio Parcial 2
+
+```{r,echo=FALSE,warning=F,message=F}
+DT::datatable(rp2_ci,style = "bootstrap")
+```
+
+## Solucionario Recuperatorio Parcial 2
+
+Dígito CI | Respuestas
+------|---------
+Par | [Aquí](https://alvarolimber.github.io/notas/EST145_I2021/rec_p2_sol_1.pdf)
+Impar | [Aquí](https://alvarolimber.github.io/notas/EST145_I2021/rec_p2_sol_2.pdf)
+
 # Rendimiento (Todos los estudiantes `r dim(bd)[1]`)
 
 ```{r,echo=FALSE}
