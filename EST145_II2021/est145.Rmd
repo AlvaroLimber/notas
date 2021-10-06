@@ -154,7 +154,7 @@ DT::datatable(p1_ci,style = "bootstrap")
 8 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/p1_sol_08.pdf)
 9 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/p1_sol_09.pdf)
 
-```{r}
+```{r,echo=FALSE}
 knitr::knit_exit()
 ```
 
