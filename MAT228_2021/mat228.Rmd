@@ -17,21 +17,152 @@ library(readxl)
 library(knitr)
 library(dplyr)
 #lista oficial
-lista<-read_excel("C:\\Users\\ALVARO\\Box\\2021\\umsa\\MAT228\\lista.xlsx",1,range = "B11:G104")
+lista<-read_excel("C:\\Users\\ALVARO\\Box\\2021\\umsa\\MAT228\\lista.xlsx",1,range = "C1:G94")
 #parcial1
 load("C:\\Users\\ALVARO\\Box\\2021\\umsa\\MAT228\\r-exams\\notasP1.Rdata")
 p1<-datavf
 #parcial2
-#load("C:\\Users\\ALVARO\\Box\\2021\\umsa\\EST145\\r-exams\\notasP2.Rdata")
-#p2<-datavf
-rm(datavf)
+p2<-read.csv("C:\\Users\\ALVARO\\Box\\2021\\umsa\\MAT228\\r-exams\\parcial2_raw.csv")
+p2<-p2[,2:4]
+names(p2)<-c("id","p2","ci")
+p2<-p2[-1,-1]
+p2$p2<-as.numeric(gsub(" / 20","",p2$p2))
+#proyecto
+nproy<-readxl::read_excel("C:\\Users\\ALVARO\\Box\\2021\\umsa\\MAT228\\orden_proyecto.xlsx")
+nproy<-nproy %>% select(grupo,proy=Total)
+names(lista)<-c("ci","name","mail","phone","grupo")
+proy<-lista %>% filter(!is.na(grupo)) %>% select(ci,grupo)
+proy<-merge(proy,nproy)
+#virtual
+#tarea<-read.csv("C:\\Users\\ALVARO\\Box\\2021\\umsa\\M#AT228\\r-exams\\tarea_classroom.csv")
+#tarea<-tarea[-c(1,2),]
+#for(i in 4:10){
+#tarea[,i]<-as.numeric(tarea[,i])
+#tarea[is.na(tarea[,i]),i]<-0-
+#}
+#tarea$tarea<-apply(tarea[,4:10],1,sum)
+#tarea<-tarea[,c(1,2,3,11)]
+#names(tarea)<-c("ap","nm","mail","tarea")
+#tarea<-tarea %>% arrange(ap) %>% filter(tarea>0)
+#tarea<-merge(tarea,lista[,c(1,3)],all.x = T)
+#writexl::write_xlsx(tarea,"C:\\Users\\ALVARO\\Box\\2021\\umsa\\MAT228\\r-exams\\tarea_classroom.xlsx")
+tarea<-read_xlsx("C:\\Users\\ALVARO\\Box\\2021\\umsa\\MAT228\\r-exams\\tarea_classroom_v1.xlsx")
+tarea<-tarea[,4:5]
+tarea<-tarea %>% group_by(ci) %>% summarise(tarea=max(tarea))
 ################################
 #Consolidado
 #ci
-ci<-lista[,c(3,4)]
+ci<-lista[,c(1,2)]
 names(ci)[1]<-"ci"
+#p1
+ci<-merge(ci,p1 %>% select(ci,p1=nota),all = T)
+#p2
+p2$ci<-gsub(" ","", p2$ci)
+p2$ci<-gsub("LP","", p2$ci)
+p2$ci<-gsub("q","", p2$ci)
+
+p2<-p2 %>% filter(!(ci %in% c(10921532, 123456)))
+
+p2[p2$ci==11064749,"ci"]<-11064649
+p2[p2$ci==12915958,"ci"]<-12925958
+p2[p2$ci==9929929,"ci"]<-9929939
+
+ci<-merge(ci,p2,all = T)
+#proy
+ci<-merge(ci,proy,all = T)
+#tarea
+ci<-merge(ci,tarea,all = T)
+ci[ci$ci=="12925958","tarea"]<-5
+ci[ci$ci=="6829472","tarea"]<-2
+#12925958 Madai Condori Apaza 5
+#6829472 Andrea Quinteros Lazarte 2
+####################################
+ci<-ci %>% select(ci,nombre=name,grupo,p1,p2,tarea,proy)
+#recuperatorio
+rec<-read.csv("C:\\Users\\ALVARO\\Box\\2021\\umsa\\MAT228\\recup.csv")
+rec<-rec[,c(3,4,10)]
+names(rec)<-c("pp","ci","parcial")
+rec$ci<-gsub("LP","",rec$ci)
+rec$ci<-gsub("L.P.","",rec$ci)
+rec$ci<-gsub(" ","",rec$ci)
+rec$ci<-gsub("lp","",rec$ci)
+rec$pp<-as.numeric(gsub(" / 40","",rec$pp))
+rp1<-rec %>% filter(parcial=="Primer parcial") %>% select(ci,rp1=pp)
+rp2<-rec %>% filter(parcial=="Segundo parcial") %>% select(ci,rp2=pp)
+#ayudantia
+ayu<-read_excel("C:\\Users\\ALVARO\\Box\\2021\\umsa\\MAT228\\ayudantia.xlsx")
+ayu<-ayu[,c(2,6)]
+names(ayu)<-c("ci","ayudantia")
+#final
+fin<-read.csv("C:\\Users\\ALVARO\\Box\\2021\\umsa\\MAT228\\final.csv")
+fin<-fin[,c(3,4)]
+names(fin)<-c("E6","ci")
+fin$E6<-as.numeric(gsub(" / 30","",fin$E6))
+
+fin$ci<-gsub("LP","",fin$ci)
+fin$ci<-gsub("CI.","",fin$ci)
+fin$ci<-gsub(" La Paz.","",fin$ci)
+fin$ci<-gsub(" ","",fin$ci)
+#8382233 cambiar a 8382223
+#49239893 cambiar a 4923893
+fin$ci[fin$ci=="8382233"]<-"8382223"
+fin$ci[fin$ci=="49239893"]<-"4923893"
+
+#############################
+ci<-merge(ci,rp1,all.x = T)
+ci<-merge(ci,rp2,all.x = T)
+ci<-merge(ci,ayu,all.x = T)
+ci<-merge(ci,fin,all.x = T)
+
+for(i in 4:11){
+ci[is.na(ci[,i]),i]<-0
+}
+ci<-ci %>% mutate(E1=pmax(p1,rp1),E2=pmax(p2,rp2)) %>% rename(E3=proy,E4=ayudantia,E5=tarea) %>% relocate(E1,E2,E3,E4,E5,E6,.after=rp2)
+ci$E4<-round(ci$E4,0)
+
+ci$E5[ci$ci=="9936502"]<-3
+#9936502 cambiar tareas a 3
+
+#total
+ci<-ci %>% mutate(Total=E1+E2+E3+E4+E5+E6)
+ci<-ci %>% arrange(ci)
+#lista kardex
+lista$nro<-1:93 
+ci<-merge(lista %>% select(ci,nro),ci)
+ci<-ci %>% arrange(nro) %>% relocate(nro,.before = ci)
+
+ci$P1<-ci$E1+ci$E5
+ci$E5<-ci$P1-20
+ci$E5[ci$E5<0]<-0
+ci$P1<-ci$P1-ci$E5
+
+ci$P2<-ci$E2+ci$E5
+ci$E5<-ci$P2-20
+ci$E5[ci$E5<0]<-0
+ci$P2<-ci$P2-ci$E5
+
+ci$P3<-ci$E3+ci$E5
+ci$E5<-ci$P3-20
+ci$E5[ci$E5<0]<-0
+ci$P3<-ci$P3-ci$E5
+
+ci$P4<-ci$E4+ci$E5
+ci$E5<-ci$P4-10
+ci$E5[ci$E5<0]<-0
+ci$P4<-ci$P4-ci$E5
+
+ci$P5<-ci$E6+ci$E5
+ci$E5<-ci$P5-30
+ci$E5[ci$E5<0]<-0
+ci$P5<-ci$P5-ci$E5
+
+ci<-ci %>% mutate(Final=P1+P2+P3+P4+P5)
+ci$Total==ci$Final
+
+writexl::write_xlsx(ci %>% select(nro,ci,nombre,P1,P2,P3,P4,P5,Final),"C:\\Users\\ALVARO\\Box\\2021\\umsa\\MAT228\\r-exams\\notas_mat228_kardex.xlsx")
 #######################
 #P1
+p1 
 p1_ci<-merge(ci,p1,all = T)
 p1_ci<-p1_ci[,c(1,8:19)]
 names(p1_ci)[1]<-"Cedula"

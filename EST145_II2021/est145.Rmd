@@ -22,10 +22,10 @@ lista<-read_excel("C:\\Users\\ALVARO\\Box\\2021\\umsa\\EST145\\lista_ii2021.xls"
 #parcial1
 load("C:\\Users\\ALVARO\\Box\\2021\\umsa\\EST145\\r-exams\\notasP1_ii2021.Rdata")
 p1<-datavf
-cc<-function(){
 #parcial2
-load("C:\\Users\\ALVARO\\Box\\2021\\umsa\\EST145\\r-exams\\notasP2.Rdata")
+load("C:\\Users\\ALVARO\\Box\\2021\\umsa\\EST145\\r-exams\\notasP2_ii2021.Rdata")
 p2<-datavf
+cc<-function(){
 #recuperatorio
 load("C:\\Users\\ALVARO\\Box\\2021\\umsa\\EST145\\r-exams\\recupP1.Rdata")
 rp1<-datavf1
@@ -56,19 +56,17 @@ names(lista)[3]<-"Cedula"
 bd<-merge(lista,p1_ci[,c("Cedula","nota_P1")],all.x = T)
 bd$nota_P1[is.na(bd$nota_P1)]<-0
 #######################
-cc<-function(){
-#P2+3puntos
+#P2
 p2_ci<-merge(ci,p2,all = T)
-p2_ci<-p2_ci[,c(1,8:18)]
+p2_ci<-p2_ci[,c(1,8:20,23)]
 names(p2_ci)[1]<-"Cedula"
-names(p2_ci)[12]<-"nota_P2"
+names(p2_ci)[15]<-"nota_P2"
 p2_ci$tipo[p2_ci$tipo==10 & !is.na(p2_ci$tipo)]<-0
-p2_ci$pts3<-0
-p2_ci$pts3[!is.na(p2_ci$nota_P2)]<-3
 #union global
-bd<-merge(bd,p2_ci[,c("Cedula","nota_P2","pts3")],all.x = T)
+bd<-merge(bd,p2_ci[,c("Cedula","nota_P2")],all.x = T)
 bd$nota_P2[is.na(bd$nota_P2)]<-0
 #######################
+cc<-function(){
 #Final
 final_ci<-merge(ci,final,all = T)
 final_ci<-final_ci[,c(1,8:24)]
@@ -128,7 +126,7 @@ oo<-order(bd$Cedula)
 * P4: Tareas
 
 ```{r,echo=FALSE,warning=F,message=F}
-DT::datatable(bd[oo,c(1,7)],style = "bootstrap")
+DT::datatable(bd[oo,c(1,7,8)],style = "bootstrap")
 
 #bd %>% mutate(Estado=if_else(Total>50,"Aprobado","Reprobado")) %>% group_by(Estado) %>% count() %>% kable()
 ```
@@ -154,11 +152,6 @@ DT::datatable(p1_ci,style = "bootstrap")
 8 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/p1_sol_08.pdf)
 9 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/p1_sol_09.pdf)
 
-```{r,echo=FALSE}
-knitr::knit_exit()
-```
-
-
 ## Patrón de respuesta Parcial 2
 
 ```{r,echo=FALSE,warning=F,message=F}
@@ -169,7 +162,7 @@ DT::datatable(p2_ci,style = "bootstrap")
 
 último dígito CI | Respuestas
 ------|---------
-0 | [Aquí](https://alvarolimber.github.io/notas/EST145_I2021/p2_sol_00.pdf)
+0 | [Aquí](https://alvarolimber.github.io/notas/EST145_I2021/p2_sol_10.pdf)
 1 | [Aquí](https://alvarolimber.github.io/notas/EST145_I2021/p2_sol_01.pdf)
 2 | [Aquí](https://alvarolimber.github.io/notas/EST145_I2021/p2_sol_02.pdf)
 3 | [Aquí](https://alvarolimber.github.io/notas/EST145_I2021/p2_sol_03.pdf)
@@ -179,6 +172,10 @@ DT::datatable(p2_ci,style = "bootstrap")
 7 | [Aquí](https://alvarolimber.github.io/notas/EST145_I2021/p2_sol_07.pdf)
 8 | [Aquí](https://alvarolimber.github.io/notas/EST145_I2021/p2_sol_08.pdf)
 9 | [Aquí](https://alvarolimber.github.io/notas/EST145_I2021/p2_sol_09.pdf)
+
+```{r,echo=FALSE}
+knitr::knit_exit()
+```
 
 ## Patrón de respuesta Final
 
