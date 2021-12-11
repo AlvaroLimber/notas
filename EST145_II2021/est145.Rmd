@@ -25,25 +25,22 @@ p1<-datavf
 #parcial2
 load("C:\\Users\\ALVARO\\Box\\2021\\umsa\\EST145\\r-exams\\notasP2_ii2021.Rdata")
 p2<-datavf
-cc<-function(){
 #recuperatorio
-load("C:\\Users\\ALVARO\\Box\\2021\\umsa\\EST145\\r-exams\\recupP1.Rdata")
+load("C:\\Users\\ALVARO\\Box\\2021\\umsa\\EST145\\r-exams\\recupP1_ii2021.Rdata")
 rp1<-datavf1
-load("C:\\Users\\ALVARO\\Box\\2021\\umsa\\EST145\\r-exams\\recupP2.Rdata")
+load("C:\\Users\\ALVARO\\Box\\2021\\umsa\\EST145\\r-exams\\recupP2_ii2021.Rdata")
 rp2<-datavf2
 #final
-load("C:\\Users\\ALVARO\\Box\\2021\\umsa\\EST145\\r-exams\\notasFINAL.Rdata")
+load("C:\\Users\\ALVARO\\Box\\2021\\umsa\\EST145\\r-exams\\notasFINAL_ii2021.Rdata")
 final<-datavf
 rm(datavf,datavf1,datavf2)
 #tareas
-tarea<-read_excel("C:\\Users\\ALVARO\\Box\\2021\\umsa\\EST145\\tareas_EST145.xlsx")
-tarea<-merge(tarea[,c("ci","Total")],lista,all = T)
-}
+tarea<-read_excel("C:\\Users\\ALVARO\\Box\\2021\\umsa\\EST145\\r-exams\\tareas_ii2021.xlsx")
+tarea<-merge(tarea[,c("ci","tarea")],lista,all.y = T)
 ################################
 #Consolidado
 #ci
 ci<-lista[,c(3,4)]
-names(ci)[1]<-"ci"
 #######################
 #P1
 p1_ci<-merge(ci,p1,all = T)
@@ -66,10 +63,9 @@ p2_ci$tipo[p2_ci$tipo==10 & !is.na(p2_ci$tipo)]<-0
 bd<-merge(bd,p2_ci[,c("Cedula","nota_P2")],all.x = T)
 bd$nota_P2[is.na(bd$nota_P2)]<-0
 #######################
-cc<-function(){
 #Final
 final_ci<-merge(ci,final,all = T)
-final_ci<-final_ci[,c(1,8:24)]
+final_ci<-final_ci[,c(1,6:21,24)]
 names(final_ci)[1]<-"Cedula"
 names(final_ci)[18]<-"nota_P3"
 final_ci$tipo[final_ci$tipo==10 & !is.na(final_ci$tipo)]<-0
@@ -87,35 +83,33 @@ names(tarea_ci)[2]<-"nota_P4"
 bd<-merge(bd,tarea_ci[,c("Cedula","nota_P4")],all.x = T)
 bd$nota_P4[is.na(bd$nota_P4)]<-0
 bd$P4<-bd$nota_P4
-bd$P4<-round((bd$P4/7)*10)
 ##################################
 #recuperatorio parcial 1
 rp1_ci<-merge(ci,rp1,all = T)
-rp1_ci<-rp1_ci[,c(1,10:19)]
+rp1_ci<-rp1_ci[,c(1,7:18)]
 names(rp1_ci)[1]<-"Cedula"
-names(rp1_ci)[11]<-"nota_rP1"
+names(rp1_ci)[13]<-"nota_rP1"
 #union global
 bd<-merge(bd,rp1_ci[,c("Cedula","nota_rP1")],all.x = T)
 bd$nota_rP1[is.na(bd$nota_rP1)]<-0
 ##################################
 #recuperatorio parcial 2
 rp2_ci<-merge(ci,rp2,all = T)
-rp2_ci<-rp2_ci[,c(1,10:19)]
+rp2_ci<-rp2_ci[,c(1,7:18)]
 names(rp2_ci)[1]<-"Cedula"
-names(rp2_ci)[11]<-"nota_rP2"
+names(rp2_ci)[13]<-"nota_rP2"
 #union global
 bd<-merge(bd,rp2_ci[,c("Cedula","nota_rP2")],all.x = T)
 bd$nota_rP2[is.na(bd$nota_rP2)]<-0
 #consolidado P1,P2,P3,P4
 bd$P1<-pmax(bd$nota_P1,bd$nota_rP1)
 bd$P2<-pmax(bd$nota_P2,bd$nota_rP2)
-bd<-bd %>% mutate(Total=P1+P2+P3+P4+pts3)
-}
+bd<-bd %>% mutate(Total=P1+P2+P3+P4)
 ###########publicar 
 oo<-order(bd$Cedula)
-#bd<-bd %>% relocate(Cedula,P1,P2,P3,P4,pts3,Total)
-#kable(bd)
-#writexl::write_xlsx(bd,"C:\\Users\\ALVARO\\Box\\2021\\umsa\\EST145\\r-exams\\consolidado_v0.xlsx")
+bd<-bd %>% relocate(Cedula,P1,P2,P3,P4,Total)
+#kable(bd[,1:6])
+writexl::write_xlsx(bd,"C:\\Users\\ALVARO\\Box\\2021\\umsa\\EST145\\r-exams\\consolidado_v0.xlsx")
 ```
 
 # Consolidado por evaluación
@@ -126,9 +120,9 @@ oo<-order(bd$Cedula)
 * P4: Tareas
 
 ```{r,echo=FALSE,warning=F,message=F}
-DT::datatable(bd[oo,c(1,7,8)],style = "bootstrap")
+DT::datatable(bd[oo,c(1:6)],style = "bootstrap")
 
-#bd %>% mutate(Estado=if_else(Total>50,"Aprobado","Reprobado")) %>% group_by(Estado) %>% count() %>% kable()
+bd %>% mutate(Estado=if_else(Total>50,"Aprobado","Reprobado")) %>% group_by(Estado) %>% count() %>% kable()
 ```
 
 ## Patrón de respuesta Parcial 1
@@ -173,34 +167,7 @@ DT::datatable(p2_ci,style = "bootstrap")
 8 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/p2_sol_08.pdf)
 9 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/p2_sol_09.pdf)
 
-```{r,echo=FALSE}
-knitr::knit_exit()
-```
-
 ## Patrón de respuesta Final
-
-En los pdf del solucionario existen errores en el ejercicio 1, 14 y 15. El detalle es:
-
-### Notas sobre el ejercicio 1
-
-Las únicas opciones correctas son:
-
-* Para el caso continuo $\int_{Rx} f(x,y) dx = f(y)$
-* Si dos variables aleatorias $X$, $Y$ son independientes, entonces $cov(x,y)=0$
-
-### Notas sobre el ejercicio 14
-
-Las únicas respuestas correctas son:
-
-* El error de tipo II reduce con una muestra más grande 
-* El error de tipo I y II se fijan al momento de calcular el tamaño de muestra para la prueba
-
-### Notas sobre el ejercicio 15
-
-Las únicas respuestas correctas son:
-
-* Las variables de las dos poblaciones se distribuyen como normal
-* La estadística de prueba se distribuye como una F de Fisher
 
 ```{r,echo=FALSE,warning=F,message=F}
 DT::datatable(final_ci,style = "bootstrap")
