@@ -211,8 +211,8 @@ DT::datatable(rp2_ci,style = "bootstrap")
 
 Dígito CI | Respuestas
 ------|---------
-Par | [Aquí](https://alvarolimber.github.io/notas/EST145_I2021/rec_p2_sol_1.pdf)
-Impar | [Aquí](https://alvarolimber.github.io/notas/EST145_I2021/rec_p2_sol_2.pdf)
+Par | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/rec_p2_sol_1.pdf)
+Impar | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/rec_p2_sol_2.pdf)
 
 # Rendimiento (Todos los estudiantes `r dim(bd)[1]`)
 
