@@ -177,16 +177,16 @@ DT::datatable(final_ci,style = "bootstrap")
 
 último dígito CI | Respuestas
 ------|---------
-0 | [Aquí](https://alvarolimber.github.io/notas/EST145_I2021/final_sol_10.pdf)
-1 | [Aquí](https://alvarolimber.github.io/notas/EST145_I2021/final_sol_01.pdf)
-2 | [Aquí](https://alvarolimber.github.io/notas/EST145_I2021/final_sol_02.pdf)
-3 | [Aquí](https://alvarolimber.github.io/notas/EST145_I2021/final_sol_03.pdf)
-4 | [Aquí](https://alvarolimber.github.io/notas/EST145_I2021/final_sol_04.pdf)
-5 | [Aquí](https://alvarolimber.github.io/notas/EST145_I2021/final_sol_05.pdf)
-6 | [Aquí](https://alvarolimber.github.io/notas/EST145_I2021/final_sol_06.pdf)
-7 | [Aquí](https://alvarolimber.github.io/notas/EST145_I2021/final_sol_07.pdf)
-8 | [Aquí](https://alvarolimber.github.io/notas/EST145_I2021/final_sol_08.pdf)
-9 | [Aquí](https://alvarolimber.github.io/notas/EST145_I2021/final_sol_09.pdf)
+0 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/final_sol_10.pdf)
+1 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/final_sol_01.pdf)
+2 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/final_sol_02.pdf)
+3 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/final_sol_03.pdf)
+4 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/final_sol_04.pdf)
+5 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/final_sol_05.pdf)
+6 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/final_sol_06.pdf)
+7 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/final_sol_07.pdf)
+8 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/final_sol_08.pdf)
+9 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/final_sol_09.pdf)
 
 ## Patrón de respuesta Recuperatorio Parcial 1
 
@@ -198,8 +198,8 @@ DT::datatable(rp1_ci,style = "bootstrap")
 
 Dígito CI | Respuestas
 ------|---------
-Par | [Aquí](https://alvarolimber.github.io/notas/EST145_I2021/rec_p1_sol_1.pdf)
-Impar | [Aquí](https://alvarolimber.github.io/notas/EST145_I2021/rec_p1_sol_2.pdf)
+Par | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/rec_p1_sol_1.pdf)
+Impar | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/rec_p1_sol_2.pdf)
 
 ## Patrón de respuesta Recuperatorio Parcial 2
 
