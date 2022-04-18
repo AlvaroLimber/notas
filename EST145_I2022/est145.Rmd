@@ -1,0 +1,272 @@
+---
+title: "Estadística II, I-2022"
+author: "MSc. Alvaro Chirino Gutierrez"
+date: "I-2022"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#knitr::knit_exit()
+```
+
+```{r,echo=FALSE,warning=F,message=F}
+rm(list=ls())
+library(readxl)
+library(knitr)
+library(dplyr)
+#lista oficial
+lista<-read_excel("C:\\Users\\ALVARO\\Box\\2022\\umsa\\EST-145\\lista_i2022_est145.xls")
+#parcial1
+load("C:\\Users\\ALVARO\\Box\\2022\\umsa\\EST-145\\r-exams\\notasP1_i2022.Rdata")
+p1<-datavf
+if(3==2){
+#parcial2
+load("C:\\Users\\ALVARO\\Box\\2021\\umsa\\EST145\\r-exams\\notasP2_ii2021.Rdata")
+p2<-datavf
+#recuperatorio
+load("C:\\Users\\ALVARO\\Box\\2021\\umsa\\EST145\\r-exams\\recupP1_ii2021.Rdata")
+rp1<-datavf1
+load("C:\\Users\\ALVARO\\Box\\2021\\umsa\\EST145\\r-exams\\recupP2_ii2021.Rdata")
+rp2<-datavf2
+#final
+load("C:\\Users\\ALVARO\\Box\\2021\\umsa\\EST145\\r-exams\\notasFINAL_ii2021.Rdata")
+final<-datavf
+rm(datavf,datavf1,datavf2)
+#tareas
+tarea<-read_excel("C:\\Users\\ALVARO\\Box\\2021\\umsa\\EST145\\r-exams\\tareas_ii2021.xlsx")
+tarea<-merge(tarea[,c("ci","tarea")],lista,all.y = T)
+}
+################################
+#Consolidado
+#ci
+ci<-lista[,c(3,4)]
+names(ci)[1]<-c("ci")
+#######################
+#P1
+p1_ci<-merge(ci,p1,all = T)
+p1_ci<-p1_ci[,c(1,6:16,19)]
+names(p1_ci)[1]<-"Cedula"
+names(p1_ci)[13]<-"nota_P1"
+p1_ci$tipo[p1_ci$tipo==10 & !is.na(p1_ci$tipo)]<-0
+#union global
+names(lista)[3]<-"Cedula"
+bd<-merge(lista,p1_ci[,c("Cedula","nota_P1")],all.x = T)
+bd$nota_P1[is.na(bd$nota_P1)]<-0
+#######################
+if(3==2){
+#P2
+p2_ci<-merge(ci,p2,all = T)
+p2_ci<-p2_ci[,c(1,8:20,23)]
+names(p2_ci)[1]<-"Cedula"
+names(p2_ci)[15]<-"nota_P2"
+p2_ci$tipo[p2_ci$tipo==10 & !is.na(p2_ci$tipo)]<-0
+#union global
+bd<-merge(bd,p2_ci[,c("Cedula","nota_P2")],all.x = T)
+bd$nota_P2[is.na(bd$nota_P2)]<-0
+#######################
+#Final
+final_ci<-merge(ci,final,all = T)
+final_ci<-final_ci[,c(1,6:21,24)]
+names(final_ci)[1]<-"Cedula"
+names(final_ci)[18]<-"nota_P3"
+final_ci$tipo[final_ci$tipo==10 & !is.na(final_ci$tipo)]<-0
+#union global
+bd<-merge(bd,final_ci[,c("Cedula","nota_P3")],all.x = T)
+bd$nota_P3[is.na(bd$nota_P3)]<-0
+bd$P3<-bd$nota_P3
+#######################
+#Tareas P4
+tarea_ci<-merge(ci,tarea,all = T)
+tarea_ci<-tarea_ci[,c(1,3)]
+names(tarea_ci)[1]<-"Cedula"
+names(tarea_ci)[2]<-"nota_P4"
+#union global
+bd<-merge(bd,tarea_ci[,c("Cedula","nota_P4")],all.x = T)
+bd$nota_P4[is.na(bd$nota_P4)]<-0
+bd$P4<-bd$nota_P4
+##################################
+#recuperatorio parcial 1
+rp1_ci<-merge(ci,rp1,all = T)
+rp1_ci<-rp1_ci[,c(1,7:18)]
+names(rp1_ci)[1]<-"Cedula"
+names(rp1_ci)[13]<-"nota_rP1"
+#union global
+bd<-merge(bd,rp1_ci[,c("Cedula","nota_rP1")],all.x = T)
+bd$nota_rP1[is.na(bd$nota_rP1)]<-0
+##################################
+#recuperatorio parcial 2
+rp2_ci<-merge(ci,rp2,all = T)
+rp2_ci<-rp2_ci[,c(1,7:18)]
+names(rp2_ci)[1]<-"Cedula"
+names(rp2_ci)[13]<-"nota_rP2"
+#union global
+bd<-merge(bd,rp2_ci[,c("Cedula","nota_rP2")],all.x = T)
+bd$nota_rP2[is.na(bd$nota_rP2)]<-0
+#consolidado P1,P2,P3,P4
+bd$P1<-pmax(bd$nota_P1,bd$nota_rP1)
+bd$P2<-pmax(bd$nota_P2,bd$nota_rP2)
+bd<-bd %>% mutate(Total=P1+P2+P3+P4)
+
+###########publicar 
+oo<-order(bd$Cedula)
+bd<-bd %>% relocate(Cedula,P1,P2,P3,P4,Total)
+#kable(bd[,1:6])
+writexl::write_xlsx(bd,"C:\\Users\\ALVARO\\Box\\2021\\umsa\\EST145\\r-exams\\consolidado_v0.xlsx")
+}
+```
+
+# Consolidado por evaluación
+
+* P1: Parcial 1
+* P2: Parcial 2
+* P3: Final
+* P4: Tareas
+
+```{r,echo=FALSE,warning=F,message=F,eval=FALSE}
+DT::datatable(bd[oo,c(1:6)],style = "bootstrap")
+
+bd %>% mutate(Estado=if_else(Total>50,"Aprobado","Reprobado")) %>% group_by(Estado) %>% count() %>% kable()
+```
+
+# Parcial 1
+
+## Patron de respuesta correcto
+
+```{r,echo=FALSE,warning=F,message=F}
+sol1<-do.call(rbind, solucion)
+sol1<-as.data.frame(sol1)
+names(sol1)<-paste0("p",1:10)
+sol1$tipo<-1:10
+sol1$tipo[sol1$tipo==10]<-0
+DT::datatable(sol1[,c(11,1:10)],style = "bootstrap")
+```
+
+## Patrón de respuesta Parcial 1
+
+```{r,echo=FALSE,warning=F,message=F}
+DT::datatable(p1_ci,style = "bootstrap")
+```
+
+## Solucionario Parcial 1
+
+último dígito CI | Respuestas
+------|---------
+0 | [Aquí](https://alvarolimber.github.io/notas/EST145_I2022/p1_sol_10.html)
+1 | [Aquí](https://alvarolimber.github.io/notas/EST145_I2022/p1_sol_01.html)
+2 | [Aquí](https://alvarolimber.github.io/notas/EST145_I2022/p1_sol_02.html)
+3 | [Aquí](https://alvarolimber.github.io/notas/EST145_I2022/p1_sol_03.html)
+4 | [Aquí](https://alvarolimber.github.io/notas/EST145_I2022/p1_sol_04.html)
+5 | [Aquí](https://alvarolimber.github.io/notas/EST145_I2022/p1_sol_05.html)
+6 | [Aquí](https://alvarolimber.github.io/notas/EST145_I2022/p1_sol_06.html)
+7 | [Aquí](https://alvarolimber.github.io/notas/EST145_I2022/p1_sol_07.html)
+8 | [Aquí](https://alvarolimber.github.io/notas/EST145_I2022/p1_sol_08.html)
+9 | [Aquí](https://alvarolimber.github.io/notas/EST145_I2022/p1_sol_09.html)
+
+```{r}
+knitr::knit_exit()
+```
+
+
+## Patrón de respuesta Parcial 2
+
+```{r,echo=FALSE,warning=F,message=F}
+DT::datatable(p2_ci,style = "bootstrap")
+```
+
+## Solucionario Parcial 2
+
+último dígito CI | Respuestas
+------|---------
+0 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/p2_sol_10.pdf)
+1 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/p2_sol_01.pdf)
+2 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/p2_sol_02.pdf)
+3 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/p2_sol_03.pdf)
+4 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/p2_sol_04.pdf)
+5 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/p2_sol_05.pdf)
+6 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/p2_sol_06.pdf)
+7 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/p2_sol_07.pdf)
+8 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/p2_sol_08.pdf)
+9 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/p2_sol_09.pdf)
+
+## Patrón de respuesta Final
+
+```{r,echo=FALSE,warning=F,message=F}
+DT::datatable(final_ci,style = "bootstrap")
+```
+
+## Solucionario Final
+
+último dígito CI | Respuestas
+------|---------
+0 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/final_sol_10.pdf)
+1 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/final_sol_01.pdf)
+2 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/final_sol_02.pdf)
+3 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/final_sol_03.pdf)
+4 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/final_sol_04.pdf)
+5 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/final_sol_05.pdf)
+6 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/final_sol_06.pdf)
+7 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/final_sol_07.pdf)
+8 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/final_sol_08.pdf)
+9 | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/final_sol_09.pdf)
+
+## Patrón de respuesta Recuperatorio Parcial 1
+
+```{r,echo=FALSE,warning=F,message=F}
+DT::datatable(rp1_ci,style = "bootstrap")
+```
+
+## Solucionario Recuperatorio Parcial 1
+
+Dígito CI | Respuestas
+------|---------
+Par | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/rec_p1_sol_1.pdf)
+Impar | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/rec_p1_sol_2.pdf)
+
+## Patrón de respuesta Recuperatorio Parcial 2
+
+```{r,echo=FALSE,warning=F,message=F}
+DT::datatable(rp2_ci,style = "bootstrap")
+```
+
+## Solucionario Recuperatorio Parcial 2
+
+Dígito CI | Respuestas
+------|---------
+Par | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/rec_p2_sol_1.pdf)
+Impar | [Aquí](https://alvarolimber.github.io/notas/EST145_II2021/rec_p2_sol_2.pdf)
+
+# Rendimiento (Todos los estudiantes `r dim(bd)[1]`)
+
+```{r,echo=FALSE}
+hist(bd$P1,xlim=c(0,30),main="Parcial 1",xlab="Nota",ylab="Estudiantes")
+abline(v=mean(bd$P1),col="blue",lwd=2)
+
+hist(bd$P2,xlim=c(0,30),main="Parcial 2",xlab="Nota",ylab="Estudiantes")
+abline(v=mean(bd$P2),col="blue",lwd=2)
+
+hist(bd$P3,xlim=c(0,30),main="Final",xlab="Nota",ylab="Estudiantes")
+abline(v=mean(bd$P3),col="blue",lwd=2)
+```
+
+# Rendimiento (Sin contar abandonos `r dim(bd[bd$Total!=0,])[1]`)
+
+```{r,echo=FALSE}
+aux<-bd$Total!=0
+hist(bd$P1[aux],xlim=c(0,30),main="Parcial 1",xlab="Nota",ylab="Estudiantes")
+abline(v=mean(bd$P1[aux]),col="blue",lwd=2)
+
+hist(bd$P2[aux],xlim=c(0,30),main="Parcial 2",xlab="Nota",ylab="Estudiantes")
+abline(v=mean(bd$P2[aux]),col="blue",lwd=2)
+
+hist(bd$P3[aux],xlim=c(0,30),main="Final",xlab="Nota",ylab="Estudiantes")
+abline(v=mean(bd$P3[aux]),col="blue",lwd=2)
+
+hist(bd$Total[aux],xlim=c(0,100),main="Nota Final",xlab="Nota",ylab="Estudiantes")
+abline(v=mean(bd$Total[aux]),col="blue",lwd=2)
+
+#library(ggplot2)
+#ggplot(bd[aux,],aes(Total))+geom_density(colour="red")+title("Total")
+```
